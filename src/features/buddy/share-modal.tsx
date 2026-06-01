@@ -1,5 +1,6 @@
 import { Check, Copy, ExternalLink, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useT } from "@/i18n";
 
 export function ShareModal({
@@ -33,7 +34,7 @@ export function ShareModal({
     setTimeout(() => setMsgCopied(false), 1800);
   };
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
       onClick={onClose}
@@ -83,6 +84,7 @@ export function ShareModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
