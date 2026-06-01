@@ -15,6 +15,7 @@ const ICDP = new Set([
   "Spain",
   "Ukraine",
 ]);
+const FRIENDLY = new Set<string>(ICDP);
 const WAGE_PER_PP = 0.13;
 const CONCURRENCY = 32;
 const MIN_PLAYERS = 300;
@@ -155,6 +156,14 @@ interface PoolPlayer {
   employerOwner: string | null;
 }
 
+async function loadAllies(): Promise<void> {
+  const se = await settle(trpc<{ allies?: string[] }>("country.getCountryById", { countryId: SWEDEN }));
+  for (const allyId of se?.allies ?? []) {
+    const c = await settle(trpc<{ name?: string }>("country.getCountryById", { countryId: allyId }));
+    if (c?.name) FRIENDLY.add(c.name);
+  }
+}
+
 async function buildPlayer(id: string): Promise<PoolPlayer | null> {
   const u = await settle(trpc<RawUser>("user.getUserById", { userId: id }));
   if (!u?.skills) return null;
@@ -173,12 +182,14 @@ async function buildPlayer(id: string): Promise<PoolPlayer | null> {
       employerSwede = dest.ownerSwede;
       employerOwner = dest.ownerName;
       if (dest.name !== "Sweden") {
-        const pp = u.skills.production?.total ?? 10;
-        const worksPerDay = ((u.skills.energy?.hourlyBarRegen ?? 4) * 24) / 10;
-        const dailyWage = pp * worksPerDay * WAGE_PER_PP;
         employer = dest.name;
-        enemy = !ICDP.has(dest.name);
-        taxPerDay = Math.round(dailyWage * (dest.income / 100) * 100) / 100;
+        enemy = !FRIENDLY.has(dest.name);
+        if (enemy) {
+          const pp = u.skills.production?.total ?? 10;
+          const worksPerDay = ((u.skills.energy?.hourlyBarRegen ?? 4) * 24) / 10;
+          const dailyWage = pp * worksPerDay * WAGE_PER_PP;
+          taxPerDay = Math.round(dailyWage * (dest.income / 100) * 100) / 100;
+        }
       }
     }
   }
@@ -224,6 +235,7 @@ async function main() {
     console.error("Set WARERA_API_KEY (the warerastats gateway API key) before running.");
     process.exit(1);
   }
+  await loadAllies();
   console.log("listing Swedish players…");
   const ids = await listSwedes();
   console.log(`${ids.length} players, fetching details…`);
