@@ -1,5 +1,5 @@
 import { Check, Copy, ExternalLink, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useT } from "@/i18n";
 
 export function ShareModal({
@@ -19,6 +19,14 @@ export function ShareModal({
   const profileUrl = `https://app.warera.io/user/${buddyId}`;
   const message = t("share.messageBody", { url: pairUrl });
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   const copyMessage = async () => {
     await navigator.clipboard.writeText(message);
     setMsgCopied(true);
@@ -26,16 +34,27 @@ export function ShareModal({
   };
 
   return (
-    <button type="button" className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      onClick={onClose}
+      role="presentation"
+    >
       <div
-        className="bg-card w-full max-w-sm cursor-default rounded-xl border p-5 text-left shadow-xl"
+        className="bg-card w-full max-w-sm rounded-xl border p-5 shadow-xl"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
       >
         <div className="mb-3 flex items-start justify-between gap-3">
           <h2 className="text-base font-semibold">{t("share.title", { name: buddyName })}</h2>
-          <span className="text-muted-foreground hover:text-foreground" aria-hidden="true">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t("share.close")}
+            className="text-muted-foreground hover:text-foreground -mr-1 -mt-1 shrink-0 rounded-md p-1 transition-colors"
+          >
             <X className="size-4" />
-          </span>
+          </button>
         </div>
 
         <p className="text-muted-foreground mb-3 text-sm leading-relaxed">{t("share.instr", { name: buddyName })}</p>
@@ -64,6 +83,6 @@ export function ShareModal({
           </button>
         </div>
       </div>
-    </button>
+    </div>
   );
 }

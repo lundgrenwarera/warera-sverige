@@ -1,6 +1,6 @@
-import { AlertTriangle, ShieldCheck, Share2 } from "lucide-react";
+import { AlertTriangle, ExternalLink, Share2, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { findPlayer, type Pool, type PoolPlayer, usePool } from "@/api/pool";
 import { type BuddyMatch, findBuddies } from "@/features/buddy/matching";
 import { ShareModal } from "@/features/buddy/share-modal";
@@ -8,10 +8,15 @@ import { UserSearch } from "@/features/search";
 import { useT } from "@/i18n";
 import { useAppStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { LastSeen } from "@/shared/components/last-seen";
 import { MoneyText } from "@/shared/components/money";
 import { RefreshIndicator } from "@/shared/components/refresh-indicator";
 import { SkillTiles } from "@/shared/components/skill-tiles";
 import { UserAvatar } from "@/shared/components/user-avatar";
+
+function profileUrl(id: string): string {
+  return `https://app.warera.io/user/${id}`;
+}
 
 function BuddyStatus({ p }: { p: PoolPlayer }) {
   const t = useT();
@@ -36,25 +41,28 @@ function BuddyCard({ me, match, index }: { me: PoolPlayer; match: BuddyMatch; in
         <UserAvatar src={player.avatar} className="size-10 shrink-0 rounded-lg" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <Link
-              to={`/buddy/${encodeURIComponent(player.username)}`}
+            <a
+              href={profileUrl(player.id)}
+              target="_blank"
+              rel="noreferrer"
               className="truncate text-sm font-semibold hover:underline"
             >
               {player.username}
-            </Link>
-            <span className="bg-chart-2/15 text-chart-2 shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium">
-              {t("buddy.matchPct", { n: matchPct })}
-            </span>
+            </a>
+            <LastSeen iso={player.lastSeen} className="shrink-0" />
           </div>
-          <BuddyStatus p={player} />
+          <div className="text-muted-foreground mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
+            <span className="text-chart-2 font-medium">{t("buddy.matchPct", { n: matchPct })}</span>
+            <BuddyStatus p={player} />
+          </div>
         </div>
         <button
           type="button"
           onClick={() => setShareOpen(true)}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
         >
           <Share2 className="size-3.5" />
-          {t("buddy.share", { name: player.username })}
+          {t("buddy.recruit")}
         </button>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-4">
@@ -89,6 +97,9 @@ function HowItWorks() {
           </li>
         ))}
       </ol>
+      <div className="bg-chart-2/10 border-chart-2/30 text-chart-2 mt-3 rounded-lg border px-3 py-2 text-sm font-medium">
+        {t("buddy.benefit")}
+      </div>
     </div>
   );
 }
@@ -104,7 +115,16 @@ function YouCard({ me }: { me: PoolPlayer }) {
       <div className="flex items-center gap-3">
         <UserAvatar src={me.avatar} className="size-11 shrink-0 rounded-lg" />
         <div className="min-w-0">
-          <div className="text-base font-semibold">{me.username}</div>
+          <a
+            href={profileUrl(me.id)}
+            target="_blank"
+            rel="noreferrer"
+            title={t("common.openProfile")}
+            className="inline-flex items-center gap-1.5 hover:underline"
+          >
+            <span className="text-base font-semibold">{me.username}</span>
+            <ExternalLink className="text-muted-foreground size-3.5" />
+          </a>
           {paired ? (
             <div className="text-chart-2 flex items-center gap-1.5 text-sm font-medium">
               <ShieldCheck className="size-3.5 shrink-0" />

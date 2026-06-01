@@ -19,6 +19,8 @@ const en = {
   "common.production": "Production",
   "common.back": "Back",
   "common.perDay": "/day",
+  "common.lastOnline": "active {{when}}",
+  "common.openProfile": "Open War Era profile",
 
   "landing.heading": "Svensk Kamratskap",
   "landing.sub": "Every coin you tax to the enemy feeds their war. Pair up, pay minimum wage, starve them out.",
@@ -36,7 +38,8 @@ const en = {
   "buddy.how": "How it works",
   "buddy.how1": "When you work, the income tax on your wage goes to the country your employer sits in — it's a percentage of the wage.",
   "buddy.how2": "Set that wage to the minimum allowed and the tax shrinks to almost nothing — no need to give up your production bonus or move.",
-  "buddy.how3": "Pair with a fellow Swede and employ each other at minimum wage. You both keep producing; enemy treasuries get almost nothing.",
+  "buddy.how3": "Pair with a fellow Swede and employ each other at minimum wage. You both keep producing; enemy treasuries get less.",
+  "buddy.benefit": "It's not just patriotic — pairing up typically nets you about 5–10% more money than a normal median-wage job.",
   "buddy.yourLeak": "You're funding the enemy: ${{amount}}/day straight to their treasury.",
   "buddy.yourLeakTo": "via your job in {{country}}",
   "buddy.noLeak": "A true Swedish tiger — you feed no enemy.",
@@ -46,6 +49,7 @@ const en = {
   "buddy.matchesSub": "Closest in energy & production — the fairest comrades to stand with.",
   "buddy.matchPct": "{{n}}% match",
   "buddy.share": "Recruit {{name}}",
+  "buddy.recruit": "Recruit",
   "buddy.copied": "Link copied!",
   "buddy.theyLeak": "funds the enemy ${{amount}}/day",
   "buddy.theyClean": "feeds no enemy",
@@ -78,6 +82,7 @@ const en = {
   "time.now": "just now",
   "time.min": "{{n}}m ago",
   "time.hour": "{{n}}h ago",
+  "time.day": "{{n}}d ago",
 } as const;
 
 export type StringKey = keyof typeof en;
@@ -96,6 +101,8 @@ const sv: Record<StringKey, string> = {
   "common.production": "Produktion",
   "common.back": "Tillbaka",
   "common.perDay": "/dag",
+  "common.lastOnline": "aktiv {{when}}",
+  "common.openProfile": "Öppna War Era-profil",
 
   "landing.heading": "Svensk Kamratskap",
   "landing.sub": "Varje krona du skattar till fienden göder deras krig. Para ihop dig, betala minimilön, svält ut dem.",
@@ -113,7 +120,8 @@ const sv: Record<StringKey, string> = {
   "buddy.how": "Så fungerar det",
   "buddy.how1": "När du jobbar går inkomstskatten på din lön till landet där din arbetsgivare ligger — det är en procentandel av lönen.",
   "buddy.how2": "Sätt lönen till lägsta tillåtna och skatten krymper till nästan ingenting — du behöver inte ge upp din produktionsbonus eller flytta.",
-  "buddy.how3": "Para ihop dig med en svensk och anställ varandra för minimilön. Ni fortsätter båda producera; fiendekassorna får nästan ingenting.",
+  "buddy.how3": "Para ihop dig med en svensk och anställ varandra för minimilön. Ni fortsätter båda producera; fiendekassorna får mindre.",
+  "buddy.benefit": "Det är inte bara patriotiskt — att para ihop sig ger dig oftast cirka 5–10% mer pengar än ett vanligt medellönejobb.",
   "buddy.yourLeak": "Du finansierar fienden: ${{amount}}/dag rakt in i deras kassa.",
   "buddy.yourLeakTo": "via ditt jobb i {{country}}",
   "buddy.noLeak": "En sann svensk tiger — du göder ingen fiende.",
@@ -123,6 +131,7 @@ const sv: Record<StringKey, string> = {
   "buddy.matchesSub": "Närmast i energi och produktion — de mest rättvisa kamraterna att stå med.",
   "buddy.matchPct": "{{n}}% matchning",
   "buddy.share": "Värva {{name}}",
+  "buddy.recruit": "Värva",
   "buddy.copied": "Länk kopierad!",
   "buddy.theyLeak": "finansierar fienden ${{amount}}/dag",
   "buddy.theyClean": "göder ingen fiende",
@@ -155,6 +164,7 @@ const sv: Record<StringKey, string> = {
   "time.now": "nyss",
   "time.min": "{{n}}m sedan",
   "time.hour": "{{n}}h sedan",
+  "time.day": "{{n}}d sedan",
 };
 
 export const DICTS: Record<LangCode, Record<StringKey, string>> = { en, sv };

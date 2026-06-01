@@ -19,7 +19,7 @@ function lastSeenMs(p: PoolPlayer): number {
 
 export function findBuddies(me: PoolPlayer, pool: Pool, limit = 6): BuddyMatch[] {
   return pool.players
-    .filter((p) => p.id !== me.id)
+    .filter((p) => p.id !== me.id && !p.employerSwede)
     .map((player) => ({ player, matchPct: matchPercent(me, player) }))
     .sort((a, b) => {
       if (b.matchPct !== a.matchPct) return b.matchPct - a.matchPct;

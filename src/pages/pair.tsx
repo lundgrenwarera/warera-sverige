@@ -66,6 +66,9 @@ export function PairPage() {
             </p>
           )}
           {pct != null && <p className="text-chart-2 mt-2 text-sm font-medium">{t("pair.match", { n: pct })}</p>}
+          <div className="bg-chart-2/10 border-chart-2/30 text-chart-2 mt-3 rounded-lg border px-3 py-2 text-sm font-medium">
+            {t("buddy.benefit")}
+          </div>
         </section>
       </div>
     </div>
